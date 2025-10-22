@@ -619,11 +619,38 @@ function showQuestion() {
 
 function checkAnswer(answerIndex) {
     const question = currentQuiz.questions[currentQuiz.currentQuestion];
-    if (answerIndex === question.correct) {
+    const isCorrect = answerIndex === question.correct;
+    if (isCorrect) {
         currentQuiz.score++;
+    } else {
+        const wrongAudio = document.getElementById('wrongSound');
+        if (wrongAudio) {
+            try { wrongAudio.currentTime = 0; wrongAudio.play().catch(() => {}); } catch (e) {}
+        }
+        showMaskOverlay();
     }
     currentQuiz.currentQuestion++;
-    showQuestion();
+    setTimeout(() => showQuestion(), isCorrect ? 150 : 800);
+}
+
+function showMaskOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'mask-overlay';
+    const mask = document.createElement('div');
+    mask.className = 'mask';
+    overlay.appendChild(mask);
+    document.body.appendChild(overlay);
+    const splatter = document.createElement('div');
+    splatter.className = 'blood-splatter';
+    splatter.style.left = (10 + Math.random() * 80) + 'vw';
+    splatter.style.top = (10 + Math.random() * 20) + 'vh';
+    document.body.appendChild(splatter);
+    document.body.classList.add('flicker');
+    setTimeout(() => document.body.classList.remove('flicker'), 400);
+    setTimeout(() => {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        if (splatter.parentNode) splatter.parentNode.removeChild(splatter);
+    }, 1300);
 }
 
 function showQuizResults() {
@@ -1265,8 +1292,16 @@ async function toggleRecentReleases() {
 
 // ===== BLOOD EFFECTS =====
 function startBloodEffects() {
-    // Create occasional blood drops
-    setInterval(createBloodDrop, 15000 + Math.random() * 30000); // Every 15-45 seconds
+    // Initial burst and occasional cascades of 10 drops
+    createBloodDrops(10);
+    setInterval(() => createBloodDrops(10), 15000 + Math.random() * 30000); // Every 15-45 seconds
+}
+
+function createBloodDrops(count) {
+    for (let i = 0; i < count; i++) {
+        // Stagger each drop for a natural cascade
+        setTimeout(createBloodDrop, i * (80 + Math.random() * 120));
+    }
 }
 
 function createBloodDrop() {
