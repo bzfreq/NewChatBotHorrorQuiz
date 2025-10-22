@@ -512,15 +512,103 @@ function closeBloodQuiz() {
     }
 }
 
-function startQuiz(category, movieTitle = null) {
+async function startQuiz(category, movieTitle = null) {
     currentQuiz.category = category;
     currentQuiz.currentQuestion = 0;
     currentQuiz.score = 0;
-    currentQuiz.questions = getQuizQuestions(category, movieTitle);
+
+    const quizContent = document.getElementById('quizContent');
+    if (quizContent) {
+        quizContent.innerHTML = `
+            <div class="flex items-center justify-center text-gray-300">
+                <div class="skeleton-loading w-4 h-4 rounded-full mr-2"></div>
+                Summoning questions from the abyss...
+            </div>
+        `;
+    }
+
+    try {
+        currentQuiz.questions = await getQuizQuestions(category, movieTitle);
+    } catch (e) {
+        console.error('Failed to load quiz questions, using fallback:', e);
+        currentQuiz.questions = await getQuizQuestions(category, null);
+    }
+
     showQuestion();
 }
 
-function getQuizQuestions(category, movieTitle) {
+// Fetches quiz questions for a specific movie from the backend and normalizes them
+async function fetchMovieQuizQuestions(movieTitle) {
+    try {
+        const resp = await fetch(`${API_BASE}/quiz?movie=${encodeURIComponent(movieTitle)}`);
+        const data = await resp.json();
+        const questions = data && data.questions;
+
+        if (!questions || !Array.isArray(questions)) {
+            throw new Error('Invalid questions payload');
+        }
+
+        const letterToIndex = (ans) => {
+            if (typeof ans !== 'string') return -1;
+            const idx = 'ABCD'.indexOf(ans.trim().toUpperCase());
+            return idx;
+        };
+
+        const normalize = (s) => (s || '').toString().trim().toLowerCase();
+
+        const normalized = questions.map((item) => {
+            const qText = item.question || item.q || '';
+            const options = (item.options || item.a || []).map(String);
+            let correctIndex = -1;
+
+            if (item.answer !== undefined && item.answer !== null) {
+                if (typeof item.answer === 'string') {
+                    const fromLetter = letterToIndex(item.answer);
+                    if (fromLetter >= 0) {
+                        correctIndex = fromLetter;
+                    } else {
+                        const byValue = options.findIndex((opt) => normalize(opt) === normalize(item.answer));
+                        if (byValue >= 0) correctIndex = byValue;
+                    }
+                } else if (typeof item.answer === 'number') {
+                    // Prefer 0-based, fallback to 1-based if needed
+                    correctIndex = item.answer;
+                    if (correctIndex >= options.length && item.answer - 1 >= 0) {
+                        correctIndex = item.answer - 1;
+                    }
+                }
+            }
+
+            if (correctIndex < 0 || correctIndex >= options.length) {
+                correctIndex = 0;
+            }
+
+            return { q: qText, a: options, correct: correctIndex };
+        });
+
+        // Keep quiz length manageable
+        return normalized.slice(0, 5);
+    } catch (err) {
+        console.warn('Movie-specific quiz fetch failed:', err);
+        return [];
+    }
+}
+
+async function getQuizQuestions(category, movieTitle) {
+    // If a specific movie is provided, try to fetch targeted questions
+    if (movieTitle) {
+        const movieQs = await fetchMovieQuizQuestions(movieTitle);
+        if (movieQs && movieQs.length > 0) {
+            return movieQs;
+        }
+
+        // Local fallback: derive simple questions from known movie details
+        const localQs = buildBasicMovieQuestions(movieTitle, currentMovieDetails);
+        if (localQs && localQs.length > 0) {
+            return localQs.slice(0, 5);
+        }
+    }
+
     const questionPools = {
         general: [
             { q: "What year was The Exorcist released?", a: ["1973", "1975", "1971", "1969"], correct: 0 },
@@ -586,9 +674,76 @@ function getQuizQuestions(category, movieTitle) {
             { q: "What was Jason's original name going to be?", a: ["Josh", "Jake", "Jerry", "Jack"], correct: 0 }
         ]
     };
-    
+
     const pool = questionPools[category] || questionPools.general;
     return pool.sort(() => 0.5 - Math.random()).slice(0, 5);
+}
+
+function shuffleArray(arr) {
+    const copy = arr.slice();
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+function buildBasicMovieQuestions(movieTitle, details) {
+    if (!details || !details.title || details.title.toLowerCase() !== movieTitle.toLowerCase()) {
+        // Fallback to using whatever details we have
+        details = details || { title: movieTitle };
+    }
+
+    const questions = [];
+    const year = parseInt(details.year, 10);
+    if (!isNaN(year)) {
+        const opts = shuffleArray([year, year - 1, year + 1, Math.max(1900, year - 10)]).map(String);
+        const correct = opts.indexOf(String(year));
+        questions.push({ q: `What year was ${details.title} released?`, a: opts, correct });
+    }
+
+    if (details.director && typeof details.director === 'string' && details.director.trim().length > 0) {
+        const director = details.director.trim();
+        const altDirectors = [
+            'John Carpenter', 'Wes Craven', 'Tobe Hooper', 'James Wan',
+            'Sam Raimi', 'David Cronenberg', 'George A. Romero', 'Ari Aster'
+        ].filter((d) => d.toLowerCase() !== director.toLowerCase());
+        const distractors = shuffleArray(altDirectors).slice(0, 3);
+        const opts = shuffleArray([director, ...distractors]);
+        const correct = opts.findIndex((o) => o === director);
+        questions.push({ q: `Who directed ${details.title}?`, a: opts, correct });
+    }
+
+    if (details.genres && typeof details.genres === 'string' && details.genres.trim().length > 0) {
+        const primaryGenre = details.genres.split(',')[0].trim();
+        const genrePool = ['Comedy', 'Drama', 'Sci-Fi', 'Romance', 'Thriller', 'Action'];
+        const distractors = shuffleArray(genrePool.filter((g) => g.toLowerCase() !== primaryGenre.toLowerCase())).slice(0, 3);
+        const opts = shuffleArray([primaryGenre, ...distractors]);
+        const correct = opts.findIndex((o) => o === primaryGenre);
+        questions.push({ q: `Which genre best fits ${details.title}?`, a: opts, correct });
+    }
+
+    if (details.rating && !isNaN(parseFloat(details.rating))) {
+        const rating = parseFloat(details.rating);
+        const candidates = [rating, Math.max(0, rating - 0.7), Math.min(10, rating + 0.6), Math.max(0, rating - 1.2)]
+            .map((n) => (Math.round(n * 10) / 10).toFixed(1));
+        const opts = shuffleArray(Array.from(new Set(candidates)));
+        const correct = opts.indexOf(rating.toFixed(1));
+        if (opts.length >= 2 && correct >= 0) {
+            questions.push({ q: `Approximate rating for ${details.title} (out of 10)?`, a: opts, correct });
+        }
+    }
+
+    // Fill up with generic questions if fewer than 5
+    if (questions.length < 5) {
+        const filler = [
+            { q: `Which of these is most likely in ${details.title}?`, a: ['Supernatural elements', 'Sports drama', 'Rom-com tropes', 'Nature documentary'], correct: 0 },
+            { q: `What medium best describes ${details.title}?`, a: ['Feature film', 'Video game', 'Graphic novel', 'TV talk show'], correct: 0 }
+        ];
+        questions.push(...filler.slice(0, 5 - questions.length));
+    }
+
+    return questions.slice(0, 5);
 }
 
 function showQuestion() {
