@@ -486,7 +486,7 @@ function openBloodQuiz(movieTitle) {
                 <h2 class="text-4xl font-bold text-red-500 mb-2" style="text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);">
                     🩸 BLOOD QUIZ 🩸
                 </h2>
-                <p class="text-gray-400">Test your horror knowledge... if you dare!</p>
+                <p class="text-gray-400">${movieTitle ? `Test your knowledge of "${movieTitle}"` : 'Test your horror knowledge... if you dare!'}</p>
             </div>
             
             <div id="quizContent" class="min-h-[300px]">
@@ -512,10 +512,35 @@ function closeBloodQuiz() {
     }
 }
 
-function startQuiz(category, movieTitle = null) {
+async function startQuiz(category, movieTitle = null) {
     currentQuiz.category = category;
     currentQuiz.currentQuestion = 0;
     currentQuiz.score = 0;
+
+    const quizContent = document.getElementById('quizContent');
+    if (movieTitle && quizContent) {
+        quizContent.innerHTML = `<div class="text-center text-gray-300">Summoning questions for "${movieTitle}"...</div>`;
+    }
+
+    if (movieTitle) {
+        // Try to load movie-specific questions from backend
+        const backendQuestions = await loadMovieQuizQuestions(movieTitle);
+        if (backendQuestions.length > 0) {
+            currentQuiz.questions = backendQuestions;
+            showQuestion();
+            return;
+        }
+
+        // Fallback: generate simple questions from known details
+        const fallbackQuestions = generateFallbackMovieQuestions(movieTitle);
+        if (fallbackQuestions.length > 0) {
+            currentQuiz.questions = fallbackQuestions;
+            showQuestion();
+            return;
+        }
+    }
+
+    // Default to category-based pool
     currentQuiz.questions = getQuizQuestions(category, movieTitle);
     showQuestion();
 }
@@ -591,6 +616,175 @@ function getQuizQuestions(category, movieTitle) {
     return pool.sort(() => 0.5 - Math.random()).slice(0, 5);
 }
 
+// Fetch movie-specific quiz questions from backend and normalize format
+async function loadMovieQuizQuestions(movieTitle) {
+    try {
+        const resp = await fetch(`${API_BASE}/quiz?movie=${encodeURIComponent(movieTitle)}`);
+        const data = await resp.json();
+        const raw = data && data.questions;
+        if (!Array.isArray(raw)) return [];
+
+        const mapped = [];
+        for (const item of raw) {
+            const questionText = item.question || item.q;
+            const options = item.options || item.a;
+            let answer = item.answer;
+            if (!questionText || !Array.isArray(options) || options.length < 2) continue;
+
+            let correctIndex = 0;
+            if (typeof answer === 'string') {
+                const letter = answer.trim().toUpperCase();
+                const letterIdx = 'ABCD'.indexOf(letter);
+                if (letterIdx >= 0 && options[letterIdx] !== undefined) {
+                    correctIndex = letterIdx;
+                } else {
+                    const idx = options.findIndex(o => String(o).trim().toLowerCase() === answer.trim().toLowerCase());
+                    if (idx >= 0) correctIndex = idx;
+                }
+            } else if (typeof answer === 'number' && answer >= 0 && answer < options.length) {
+                correctIndex = answer;
+            } else if (typeof item.correct === 'number') {
+                correctIndex = item.correct;
+            }
+
+            mapped.push({ q: questionText, a: options, correct: correctIndex });
+        }
+
+        return mapped.slice(0, 5);
+    } catch (e) {
+        console.error('Quiz fetch error:', e);
+        return [];
+    }
+}
+
+// Build simple movie-specific questions from known details as a fallback
+function generateFallbackMovieQuestions(movieTitle) {
+    const details = currentMovieDetails || {};
+    const questions = [];
+
+    function shuffleWithCorrectFirst(options, correctValue) {
+        const arr = [...options];
+        // put correct at random index
+        const correctIdx = Math.floor(Math.random() * arr.length);
+        const correctPos = arr.findIndex(o => String(o) === String(correctValue));
+        if (correctPos !== -1) {
+            [arr[correctIdx], arr[correctPos]] = [arr[correctPos], arr[correctIdx]];
+        }
+        return { options: arr, correctIndex: correctIdx };
+    }
+
+    function uniqueSample(pool, count, exclude = new Set()) {
+        const filtered = pool.filter(x => !exclude.has(String(x)));
+        const out = [];
+        while (out.length < count && filtered.length > 0) {
+            const idx = Math.floor(Math.random() * filtered.length);
+            out.push(filtered.splice(idx, 1)[0]);
+        }
+        return out;
+    }
+
+    // 1) Exact title question
+    const decoyTitlesPool = [
+        'Halloween', 'Scream', 'The Conjuring', 'It', 'Hereditary', 'The Exorcist',
+        'A Nightmare on Elm Street', 'Saw', 'Friday the 13th', 'Get Out', 'Midsommar',
+        'Sinister', 'The Ring', 'Insidious', 'Candyman', 'The Babadook'
+    ];
+    const titleEx = new Set([movieTitle]);
+    const titleDecoys = uniqueSample(decoyTitlesPool, 3, titleEx);
+    if (titleDecoys.length === 3) {
+        const all = [movieTitle, ...titleDecoys];
+        const { options, correctIndex } = shuffleWithCorrectFirst(all, movieTitle);
+        questions.push({ q: `Which of these is the exact title you searched?`, a: options, correct: correctIndex });
+    }
+
+    // 2) Year question
+    if (details.year) {
+        const year = parseInt(details.year, 10);
+        if (!Number.isNaN(year)) {
+            const decoys = new Set([String(year)]);
+            const years = [];
+            while (years.length < 3) {
+                const delta = Math.floor(Math.random() * 6) + 1; // 1..6
+                const sign = Math.random() < 0.5 ? -1 : 1;
+                const candidate = String(year + sign * delta);
+                if (!decoys.has(candidate)) {
+                    decoys.add(candidate);
+                    years.push(candidate);
+                }
+            }
+            const all = [String(year), ...years];
+            const { options, correctIndex } = shuffleWithCorrectFirst(all, String(year));
+            questions.push({ q: `What year was "${movieTitle}" released?`, a: options, correct: correctIndex });
+        }
+    }
+
+    // 3) Director question
+    if (details.director) {
+        const director = details.director;
+        const directorPool = [
+            'Wes Craven', 'John Carpenter', 'Tobe Hooper', 'George Romero', 'James Wan',
+            'Ari Aster', 'Mike Flanagan', 'Sam Raimi', 'David Cronenberg', 'Jordan Peele'
+        ];
+        const decoys = uniqueSample(directorPool, 3, new Set([director]));
+        if (decoys.length === 3) {
+            const all = [director, ...decoys];
+            const { options, correctIndex } = shuffleWithCorrectFirst(all, director);
+            questions.push({ q: `Who directed "${movieTitle}"?`, a: options, correct: correctIndex });
+        }
+    }
+
+    // 4) Genre question
+    if (details.genres) {
+        const parsed = String(details.genres).split(',').map(s => s.trim()).filter(Boolean);
+        const mainGenre = parsed[0];
+        if (mainGenre) {
+            const genrePool = ['Horror', 'Thriller', 'Mystery', 'Comedy', 'Drama', 'Sci-Fi', 'Fantasy', 'Action'];
+            const decoys = uniqueSample(genrePool, 3, new Set([mainGenre]));
+            if (decoys.length === 3) {
+                const all = [mainGenre, ...decoys];
+                const { options, correctIndex } = shuffleWithCorrectFirst(all, mainGenre);
+                questions.push({ q: `Which genre includes "${movieTitle}"?`, a: options, correct: correctIndex });
+            }
+        }
+    }
+
+    // 5) Rating question (if available)
+    if (details.rating) {
+        const ratingVal = parseFloat(details.rating);
+        if (!Number.isNaN(ratingVal)) {
+            const correct = ratingVal.toFixed(1);
+            const decoySet = new Set([correct]);
+            const decoys = [];
+            while (decoys.length < 3) {
+                const delta = (Math.floor(Math.random() * 5) + 1) / 10; // 0.1..0.5
+                const sign = Math.random() < 0.5 ? -1 : 1;
+                let candidateNum = Math.min(10, Math.max(0, ratingVal + sign * delta));
+                const candidate = candidateNum.toFixed(1);
+                if (!decoySet.has(candidate)) {
+                    decoySet.add(candidate);
+                    decoys.push(candidate);
+                }
+            }
+            const all = [correct, ...decoys];
+            const { options, correctIndex } = shuffleWithCorrectFirst(all, correct);
+            questions.push({ q: `What is the rating of "${movieTitle}" (to 1 decimal)?`, a: options, correct: correctIndex });
+        }
+    }
+
+    // Ensure at least 5 questions, add a title word question if needed
+    while (questions.length < 5) {
+        const words = String(movieTitle).split(/\s+/).map(w => w.replace(/[^\w']/g, '')).filter(w => w.length >= 3);
+        const word = words.length > 0 ? words[Math.floor(Math.random() * words.length)] : movieTitle;
+        const decoyWordPool = ['Night', 'Blood', 'Dark', 'Ghost', 'Fear', 'Death', 'Curse', 'Evil', 'Shadow', 'Mask'];
+        const decoys = uniqueSample(decoyWordPool, 3, new Set([word]));
+        const all = [word, ...decoys];
+        const { options, correctIndex } = shuffleWithCorrectFirst(all, word);
+        questions.push({ q: `Which of these words appears in the title "${movieTitle}"?`, a: options, correct: correctIndex });
+    }
+
+    return questions.slice(0, 5);
+}
+
 function showQuestion() {
     const quizContent = document.getElementById('quizContent');
     if (!quizContent || currentQuiz.currentQuestion >= currentQuiz.questions.length) {
@@ -601,7 +795,7 @@ function showQuestion() {
     const question = currentQuiz.questions[currentQuiz.currentQuestion];
     quizContent.innerHTML = `
         <div class="text-center mb-4">
-            <p class="text-red-400 text-sm">Question ${currentQuiz.currentQuestion + 1} of 5</p>
+            <p class="text-red-400 text-sm">Question ${currentQuiz.currentQuestion + 1} of ${currentQuiz.questions.length}</p>
         </div>
         <div class="mb-6">
             <h3 class="text-xl text-white font-bold mb-4">${question.q}</h3>
@@ -695,7 +889,7 @@ function showQuizResults() {
                 </h3>
                 <p class="text-gray-300 text-lg mb-4">${resultMessage}</p>
                 <div class="text-4xl font-bold text-yellow-400 mb-2">
-                    ${currentQuiz.score}/5
+                    ${currentQuiz.score}/${currentQuiz.questions.length}
                 </div>
             </div>
             
