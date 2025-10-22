@@ -291,27 +291,27 @@ function addChatMessage(type, message, movieDetails = null, isLoading = false) {
                 content += `
 
                     <div class="flex space-x-2 mt-3">
-                        <button onclick="watchTrailer('${movieToDisplay.title}')" 
+                        <button onclick='watchTrailer(${JSON.stringify(movieToDisplay.title)})' 
                                 class="px-3 py-1 bg-red-600 text-white text-sm rounded-full hover:bg-red-700 transition-colors">
                             🎬 Watch Trailer
                         </button>
-                        <button onclick="tellMeMore('${movieToDisplay.title}')" 
+                        <button onclick='tellMeMore(${JSON.stringify(movieToDisplay.title)})' 
                                 class="px-3 py-1 bg-gray-600 text-white text-sm rounded-full hover:bg-gray-700 transition-colors">
                             📖 Tell Me More
                         </button>
-                        <button onclick="addToMyList('${movieToDisplay.title}')" 
+                        <button onclick='addToMyList(${JSON.stringify(movieToDisplay.title)})' 
                                 class="px-3 py-1 bg-green-600 text-white text-sm rounded-full hover:bg-green-700 transition-colors">
                             ➕ Add to List
                         </button>
-                        <button onclick="suggestSimilar('${movieToDisplay.title}')" 
+                        <button onclick='suggestSimilar(${JSON.stringify(movieToDisplay.title)})' 
                                 class="px-3 py-1 bg-purple-600 text-white text-sm rounded-full hover:bg-purple-700 transition-colors">
                             ✨ Movies Like This
                         </button>
-                        <button onclick="openBloodShop('${movieToDisplay.title}')" 
+                        <button onclick='openBloodShop(${JSON.stringify(movieToDisplay.title)})' 
                                 class="px-3 py-1 bg-red-600 text-white text-sm rounded-full hover:bg-red-700 transition-colors">
                             🩸 Blood Shop
                         </button>
-<button onclick="openBloodQuiz('${movieToDisplay.title}')" 
+<button onclick='openBloodQuiz(${JSON.stringify(movieToDisplay.title)})' 
         class="px-3 py-1 bg-blue-900 text-white text-sm rounded-full hover:bg-blue-700 transition-colors">
     🩸 Blood Quiz
 </button>
@@ -899,7 +899,7 @@ function loadMyList() {
     } else {
         myListContainer.innerHTML = myList.map(movie => 
             `<li class="text-gray-300 text-xs cursor-pointer hover:text-red-400 transition-colors" 
-                 onclick="searchMovie('${movie}')">${movie}</li>`
+                 onclick='searchMovie(${JSON.stringify(movie)})'>${movie}</li>`
         ).join('');
     }
 }
@@ -932,7 +932,7 @@ function updateStreamingSection(movieDetails) {
                         <span class="streaming-tag streaming-shudder">Shudder</span>
                     </div>
                     
-                    <button onclick="suggestSimilar('${movieDetails.title}')" 
+                    <button onclick='suggestSimilar(${JSON.stringify(movieDetails.title)})' 
                             class="w-full mt-2 px-2 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors">
                         🎬 Similar Movies
                     </button>
@@ -960,7 +960,7 @@ function updateRecommendations(recommendations) {
     }
     
     const recsHtml = recommendations.map(rec => `
-        <div class="rec-card p-2 cursor-pointer" onclick="searchMovie('${rec.title}')">
+        <div class="rec-card p-2 cursor-pointer" onclick='searchMovie(${JSON.stringify(rec.title)})'>
             <div class="flex items-center space-x-2">
                 ${rec.poster ? 
                     `<img src="${rec.poster}" 
@@ -1226,7 +1226,7 @@ async function loadTheaterReleases() {
             const releasesHtml = `
                 <h3 class="text-center text-sm font-bold text-white mb-2" style="text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); animation: pulse 2s infinite;">🎬 NOW IN THEATERS 🎬</h3>
                 ${data.releases.map(movie => `
-                    <div class="theater-item" onclick="searchMovie('${movie.title}')">
+                    <div class="theater-item" onclick='searchMovie(${JSON.stringify(movie.title)})'>
                         ${movie.poster_path ? 
                             `<img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" 
                                  alt="${movie.title}" 
