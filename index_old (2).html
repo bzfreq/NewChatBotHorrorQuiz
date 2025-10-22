@@ -1,0 +1,1162 @@
+New chat
+
+Looking at your document, YES - IT GOT CUT OFF AGAIN! 😤
+
+The index.html file ends abruptly in the middle of the loadPersonalizedRecommendations() function at line around where it should continue with more code.
+
+HERE'S THE PROBLEM: The file is too large to generate in one artifact, and it keeps getting truncated.
+
+SOLUTION - BETTER APPROACH:
+
+Instead of regenerating the ENTIRE index.html file, let me give you ONLY THE FUNCTIONS TO ADD to your existing index.html file.
+
+WHAT YOU'LL DO:
+
+    Keep your current working index.html
+    I'll give you the 3 functions to paste in
+    You paste them at the bottom of your <script> section
+
+READY?
+
+Say "yes" and I'll give you ONLY the 3 functions you need to copy/paste into your existing index.html:
+
+    loadHorrorProfile()
+    loadPersonalizedRecommendations()
+    handleGenreClick()
+
+This way nothing gets cut off! 🩸
+
+no  im to tirdf, can you geneate it  in 4 tries, to kmake it smaller? nbnut I want you to put a line at the th4 ver ends of the pagfe that syasy delete me like ten times so its easdy for me to sseyy, and that will eb a maekwer for me , so I cna cna pasdt each ssection into a fuiels...hoews sddoes tjhat dound?
+
+PERFECT PLAN! 🩸
+
+I'll split the complete index.html into 4 PARTS with clear "DELETE ME DELETE ME DELETE ME..." markers at the end of each part.
+
+HERE'S HOW IT WORKS:
+
+    I generate PART 1 with the marker at the end
+    You copy PART 1 into your file
+    I generate PART 2 with the marker at the end
+    You paste PART 2 below PART 1
+    Repeat for PART 3 and PART 4
+    Delete all the "DELETE ME" lines when done
+
+EACH PART WILL END WITH:
+
+DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME DELETE ME
+
+So you can easily see where each part ends!
+
+READY FOR PART 1 OF 4? 🎃
+
+Say "yes" and I'll start with PART 1!
+
+yes sir claude
+
+INDEX.HTML - PART 1 OF 4 🩸
+html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horror Oracle - Your Personal Horror Movie Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Special Elite', cursive;
+            background: linear-gradient(to bottom, #0a0a0a, #1a0000);
+            color: #ff0000;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .blood-drip {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, #8b0000, transparent);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            border-bottom: 3px solid #8b0000;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.5);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2.5rem;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000, 0 0 40px #8b0000;
+            letter-spacing: 3px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-greeting {
+            color: #ff6b6b;
+            font-size: 1rem;
+        }
+
+        #signInButton, #signOutButton {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        #signInButton:hover, #signOutButton:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #8b0000;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-item {
+            background: rgba(139, 0, 0, 0.2);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border-left: 3px solid #ff0000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(139, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #8b0000;
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #movieSearch {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #8b0000;
+            border-radius: 5px;
+            color: #ff0000;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+        }
+
+        #movieSearch::placeholder {
+            color: #ff6b6b;
+        }
+
+        #searchButton {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchButton:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            transform: translateY(-2px);
+        }
+
+        .genre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .genre-tag {
+            background: rgba(139, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 2px solid #8b0000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .genre-tag:hover {
+            background: rgba(139, 0, 0, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .genre-tag.active {
+            background: #8b0000;
+            border-color: #ff0000;
+        }
+
+        #movieResult {
+            margin-top: 2rem;
+        }
+
+        .movie-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #8b0000;
+            border-radius: 10px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .movie-poster {
+            width: 100%;
+            border-radius: 10px;
+            border: 3px solid #8b0000;
+            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .movie-info h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 2rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .movie-plot {
+            line-height: 1.8;
+            color: #ff6b6b;
+            margin-bottom: 1.5rem;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            transform: translateY(-2px);
+        }
+
+        .right-sidebar {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #8b0000;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .right-sidebar h3 {
+            font-family: 'Creepster', cursive;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .similar-movie {
+            background: rgba(139, 0, 0, 0.2);
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 5px;
+            border-left: 3px solid #ff0000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .similar-movie:hover {
+            background: rgba(139, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+
+        .obscure-gems {
+            margin-top: 3rem;
+        }
+
+        .obscure-gems h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .gems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gem-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #8b0000;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .gem-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .gem-info {
+            padding: 1rem;
+        }
+
+        .gem-title {
+            font-family: 'Creepster', cursive;
+            font-size: 1.1rem;
+            color: #ff0000;
+            margin-bottom: 0.5rem;
+        }
+
+        .gem-year {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+
+/* Quiz Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0a0a0a, #1a0000);
+            margin: 5% auto;
+            padding: 3rem;
+            border: 3px solid #8b0000;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .close {
+            color: #ff0000;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-header h2 {
+            font-family: 'Nosifer', cursive;
+            font-size: 2rem;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-question {
+            font-family: 'Creepster', cursive;
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background: rgba(139, 0, 0, 0.2);
+            border: 2px solid #8b0000;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            color: #ff6b6b;
+        }
+
+        .quiz-option:hover {
+            background: rgba(139, 0, 0, 0.4);
+            border-color: #ff0000;
+            transform: translateX(10px);
+        }
+
+        .quiz-option.selected {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+        }
+
+        .quiz-option.correct {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff0000;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .quiz-button {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            transform: translateY(-2px);
+        }
+
+        .quiz-button:disabled {
+            background: #333;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .quiz-progress {
+            text-align: center;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .quiz-results {
+            text-align: center;
+        }
+
+        .quiz-results h3 {
+            font-family: 'Creepster', cursive;
+            font-size: 2rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-score {
+            font-size: 3rem;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+            margin: 1rem 0;
+        }
+
+        .rating-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(139, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 2px solid #8b0000;
+        }
+
+        .rating-container h4 {
+            font-family: 'Creepster', cursive;
+            color: #ff0000;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #444;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+        .submit-rating {
+            width: 100%;
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-rating:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+        }
+
+        /* Horror Profile Badge */
+        .horror-profile-badge {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .horror-profile-badge h3 {
+            font-family: 'Creepster', cursive;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .horror-profile-icon {
+            font-size: 3rem;
+            margin: 0.5rem 0;
+        }
+
+        .horror-profile-type {
+            font-size: 1.3rem;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            font-weight: bold;
+        }
+
+        /* For You Section */
+        .for-you-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .for-you-movie {
+            background: rgba(139, 0, 0, 0.2);
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 5px;
+            border-left: 3px solid #ff0000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .for-you-movie:hover {
+            background: rgba(139, 0, 0, 0.4);
+            transform: translateX(5px);
+        }
+
+        .for-you-movie h4 {
+            color: #ff0000;
+            margin-bottom: 0.3rem;
+        }
+
+        .for-you-movie p {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+        }
+
+        /* Favorite genre highlighting */
+        .genre-tag.favorite {
+            border: 3px solid gold;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            padding: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 200px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar, .right-sidebar {
+                position: static;
+            }
+
+            .movie-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .gems-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blood-drip"></div>
+
+    <header>
+        <div class="header-content">
+            <h1>🎃 HORROR ORACLE 🎃</h1>
+            <div class="user-info">
+                <span class="user-greeting" id="userGreeting">Not signed in</span>
+                <button id="signInButton">Sign In with Google</button>
+                <button id="signOutButton" style="display: none;">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <!-- Horror Profile Badge (shows when logged in) -->
+            <div id="horrorProfileBadge" style="display: none;">
+                <!-- Profile content will be inserted here -->
+            </div>
+
+            <div class="sidebar-section">
+                <h2>🎬 IN THEATERS</h2>
+                <div id="theaterReleases">
+                    <div class="sidebar-item">Loading theater releases...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h2>📺 STREAMING</h2>
+                <div id="streamingReleases">
+                    <div class="sidebar-item">Loading streaming releases...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 id="myListTitle">📝 MY LIST</h2>
+                <div id="myList">
+                    <div class="sidebar-item">Sign in to save movies</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="search-section">
+                <h2 style="font-family: 'Creepster', cursive; font-size: 2rem; color: #ff0000; text-shadow: 0 0 10px #ff0000; margin-bottom: 1rem;">
+                    🔮 Search the Horror Oracle
+                </h2>
+                <div class="search-container">
+                    <input type="text" id="movieSearch" placeholder="Enter a horror movie title...">
+                    <button id="searchButton">🔍 SEARCH</button>
+                </div>
+
+                <div class="genre-tags">
+                    <div class="genre-tag" data-genre="slasher">🔪 SLASHERS</div>
+                    <div class="genre-tag" data-genre="zombie">🧟 ZOMBIES</div>
+                    <div class="genre-tag" data-genre="vampire">🧛 VAMPIRES</div>
+                    <div class="genre-tag" data-genre="ghost">👻 GHOSTS</div>
+                    <div class="genre-tag" data-genre="demon">😈 DEMONS</div>
+                    <div class="genre-tag" data-genre="psychological">🧠 PSYCHOLOGICAL</div>
+                    <div class="genre-tag" data-genre="creature">🦇 CREATURES</div>
+                    <div class="genre-tag" data-genre="found-footage">📹 FOUND FOOTAGE</div>
+                    <div class="genre-tag" data-genre="cult">🕯️ CULT</div>
+                    <div class="genre-tag" data-genre="supernatural">✨ SUPERNATURAL</div>
+                </div>
+            </div>
+
+            <div id="movieResult"></div>
+
+            <div class="obscure-gems">
+                <h2>💎 OBSCURE HORROR GEMS</h2>
+                <div class="gems-grid" id="obscureGems"></div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- For You Section (replaces Similar Movies when logged in) -->
+            <div id="forYouSection" style="display: none;">
+                <h3>🎯 FOR YOU</h3>
+                <div id="forYouMovies">
+                    <!-- Personalized recommendations will appear here -->
+                </div>
+            </div>
+
+            <!-- Similar Movies Section (default) -->
+            <div id="similarMoviesSection">
+                <h3>🎭 SIMILAR MOVIES</h3>
+                <div id="similarMovies">
+                    <p style="color: #ff6b6b; text-align: center; padding: 1rem;">
+                        Search for a movie to see similar recommendations
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h3>📊 COMMUNITY STATS</h3>
+                <div id="communityStats">
+                    <div class="sidebar-item">
+                        <strong>Most Searched:</strong><br>
+                        The Exorcist
+                    </div>
+                    <div class="sidebar-item">
+                        <strong>Trending:</strong><br>
+                        Talk to Me
+                    </div>
+                    <div class="sidebar-item">
+                        <strong>Hidden Gem:</strong><br>
+                        Hell House LLC
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+<!-- Quiz Modal -->
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="quiz-header">
+                <h2>🩸 BLOOD QUIZ 🩸</h2>
+                <p style="color: #ff6b6b; text-align: center;">Test your horror knowledge!</p>
+            </div>
+            <div id="quizContent">
+                <div class="quiz-progress">
+                    Question <span id="currentQuestion">1</span> of <span id="totalQuestions">5</span>
+                </div>
+                <div class="quiz-question" id="quizQuestion"></div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div class="quiz-navigation">
+                    <button class="quiz-button" id="prevButton" style="display: none;">← Previous</button>
+                    <button class="quiz-button" id="nextButton">Next →</button>
+                </div>
+            </div>
+            <div id="quizResults" class="quiz-results" style="display: none;">
+                <h3>Quiz Complete!</h3>
+                <div class="quiz-score" id="finalScore"></div>
+                <p style="color: #ff6b6b; margin: 1rem 0;" id="scoreMessage"></p>
+                
+                <div class="rating-container">
+                    <h4>Rate this movie:</h4>
+                    <div class="stars" id="ratingStars">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <button class="submit-rating" id="submitRating">Submit Rating</button>
+                </div>
+                
+                <button class="quiz-button" id="closeQuiz" style="margin-top: 1rem; width: 100%;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Sign-In Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script src="script-js-combined.js"></script>
+
+    <script>
+        // Google Sign-In Configuration
+        let currentUser = null;
+
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: '342853672757-buic7v3b0rru2ms3bsjckia6p65pqr7e.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById('signInButton'),
+                { 
+                    theme: 'filled_black', 
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular'
+                }
+            );
+
+            // Check if user is already signed in
+            const storedUser = localStorage.getItem('horrorOracleUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                updateUIForSignedInUser(currentUser);
+            }
+        };
+
+        function handleCredentialResponse(response) {
+            const responsePayload = parseJwt(response.credential);
+            
+            currentUser = {
+                id: responsePayload.sub,
+                name: responsePayload.name,
+                email: responsePayload.email,
+                picture: responsePayload.picture
+            };
+
+            localStorage.setItem('horrorOracleUser', JSON.stringify(currentUser));
+            updateUIForSignedInUser(currentUser);
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        function updateUIForSignedInUser(user) {
+            document.getElementById('userGreeting').textContent = `Hi, ${user.name}!`;
+            document.getElementById('signInButton').style.display = 'none';
+            document.getElementById('signOutButton').style.display = 'block';
+            document.getElementById('myListTitle').textContent = `📝 ${user.name.toUpperCase().split(' ')[0]}'S LIST`;
+            
+            // Load user data
+            loadUserData(user.id);
+            
+            // Load horror profile
+            loadHorrorProfile(user.id);
+            
+            // Load personalized recommendations
+            loadPersonalizedRecommendations(user.id);
+        }
+
+        document.getElementById('signOutButton').addEventListener('click', function() {
+            currentUser = null;
+            localStorage.removeItem('horrorOracleUser');
+            
+            document.getElementById('userGreeting').textContent = 'Not signed in';
+            document.getElementById('signInButton').style.display = 'block';
+            document.getElementById('signOutButton').style.display = 'none';
+            document.getElementById('myListTitle').textContent = '📝 MY LIST';
+            document.getElementById('myList').innerHTML = '<div class="sidebar-item">Sign in to save movies</div>';
+            
+            // Hide horror profile
+            document.getElementById('horrorProfileBadge').style.display = 'none';
+            
+            // Hide For You section, show Similar Movies
+            document.getElementById('forYouSection').style.display = 'none';
+            document.getElementById('similarMoviesSection').style.display = 'block';
+            
+            google.accounts.id.disableAutoSelect();
+        });
+
+        // Load user data (saved movies)
+        function loadUserData(userId) {
+            fetch(`/get-user-data?user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const myListDiv = document.getElementById('myList');
+                    if (data.saved_movies && data.saved_movies.length > 0) {
+                        myListDiv.innerHTML = data.saved_movies.map(movie => 
+                            `<div class="sidebar-item" onclick="searchMovie('${movie.title}')">${movie.title}</div>`
+                        ).join('');
+                    } else {
+                        myListDiv.innerHTML = '<div class="sidebar-item">No saved movies yet</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading user data:', error);
+                });
+        }
+
+        // Load horror profile
+        function loadHorrorProfile(userId) {
+            fetch(`/get-horror-profile?user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.profile) {
+                        const profileBadge = document.getElementById('horrorProfileBadge');
+                        const profileIcon = getProfileIcon(data.profile);
+                        
+                        profileBadge.innerHTML = `
+                            <div class="horror-profile-badge">
+                                <h3>YOUR HORROR PROFILE</h3>
+                                <div class="horror-profile-icon">${profileIcon}</div>
+                                <div class="horror-profile-type">${data.profile}</div>
+                            </div>
+                        `;
+                        profileBadge.style.display = 'block';
+                        
+                        // Reorder genre tags based on preferences
+                        if (data.genre_searches) {
+                            reorderGenreTags(data.genre_searches);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading horror profile:', error);
+                });
+        }
+
+        // Get profile icon based on profile type
+        function getProfileIcon(profile) {
+            const icons = {
+                'Slasher Fan': '🔪',
+                'Zombie Enthusiast': '🧟',
+                'Vampire Lover': '🧛',
+                'Ghost Hunter': '👻',
+                'Demon Hunter': '😈',
+                'Psychological Thriller Buff': '🧠',
+                'Creature Feature Fan': '🦇',
+                'Found Footage Explorer': '📹',
+                'Cult Classic Connoisseur': '🕯️',
+                'Supernatural Seeker': '✨',
+                'Gore Hound': '💉',
+                'Classic Horror Buff': '🎬'
+            };
+            return icons[profile] || '🎃';
+        }
+
+        // Load personalized recommendations
+        function loadPersonalizedRecommendations(userId) {
+            fetch(`/get-personalized-recommendations?user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        const forYouDiv = document.getElementById('forYouMovies');
+                        forYouDiv.innerHTML = data.recommendations.map(movie => `
+                            <div class="for-you-movie" onclick="searchMovie('${movie.title}')">
+                                <h4>${movie.title}</h4>
+                                <p>${movie.year || 'N/A'}</p>
+                            </div>
+                        `).join('');
+                        
+                        // Show For You section, hide Similar Movies
+                        document.getElementById('forYouSection').style.display = 'block';
+                        document.getElementById('similarMoviesSection').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading personalized recommendations:', error);
+                });
+        }
+
+        // Reorder genre tags to highlight favorite
+        function reorderGenreTags(genreSearches) {
+            // Find the most searched genre
+            let maxGenre = null;
+            let maxCount = 0;
+            
+            for (const [genre, count] of Object.entries(genreSearches)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxGenre = genre;
+                }
+            }
+            
+            if (maxGenre) {
+                // Add gold border to favorite genre
+                const genreTags = document.querySelectorAll('.genre-tag');
+                genreTags.forEach(tag => {
+                    if (tag.dataset.genre === maxGenre) {
+                        tag.classList.add('favorite');
+                    }
+                });
+            }
+        }
+
+        // Track genre preference when user clicks genre tag
+        function handleGenreClick(genre) {
+            if (currentUser) {
+                fetch('/track-genre-preference', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: currentUser.id,
+                        genre: genre
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Genre preference tracked:', data);
+                    // Reload profile to update
+                    loadHorrorProfile(currentUser.id);
+                })
+                .catch(error => {
+                    console.error('Error tracking genre preference:', error);
+                });
+            }
+        }
+
+        // Add click handlers to genre tags
+        document.querySelectorAll('.genre-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const genre = this.dataset.genre;
+                handleGenreClick(genre);
+                
+                // Existing genre tag functionality (if any)
+                this.classList.toggle('active');
+            });
+        });
+
+        // Search movie function
+        function searchMovie(title) {
+            document.getElementById('movieSearch').value = title;
+            document.getElementById('searchButton').click();
+        }
+
+        // Initialize app
+        loadTheaterReleases();
+        loadStreamingReleases();
+        loadObscureGems();
+    </script>
+</body>
+</html>
+

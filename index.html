@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horror Oracle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto:wght@300;400;500;700&family=Nosifer&family=Bebas+Neue&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --text-color: #e0e0e0;
+      --accent-color: #b91c1c;
+      --secondary-color: #7d1414;
+      --input-bg: #1a1a1a;
+      --chat-bg: #111111;
+      --user-bubble: #333;
+      --bot-bubble: #222;
+      --blood-color: #7d0b0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: linear-gradient(to bottom, #200122, #060107);
+    }
+
+    .creepster {
+      font-family: 'Creepster', cursive;
+    }
+
+    .nosifer {
+      font-family: 'Nosifer', cursive;
+    }
+
+    .bebas {
+      font-family: 'Bebas Neue', cursive;
+    }
+
+    .oswald {
+      font-family: 'Oswald', sans-serif;
+    }
+
+    /* Main container layout */
+    .container {
+      display: flex;
+      flex: 1;
+      padding: 1rem;
+      gap: 1.5rem;
+      position: relative;
+      max-height: calc(100vh - 80px);
+    }
+
+    /* Side panel styling */
+    .side-panel {
+      width: 200px;
+      background: rgba(17, 17, 17, 0.7);
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      backdrop-filter: blur(10px);
+      transition: width 0.3s ease-in-out;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+
+    .side-panel.collapsed {
+      width: 60px;
+      overflow: hidden;
+      align-items: center;
+      padding: 0.5rem;
+    }
+
+    .side-panel-title {
+  color: var(--accent-color);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 8px;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  font-size: 0.8rem;
+}
+
+/* MY LIST - SUPER CREEPY STYLING */
+#my-list-title {
+  font-family: 'Nosifer', cursive;
+  font-size: 1rem;
+  color: #ff0000;
+  text-shadow: 0 0 20px #ff0000, 0 0 40px #8b0000, 0 2px 4px rgba(0,0,0,0.8);
+  animation: bloodPulse 2s infinite, drip 3s infinite;
+  border: 3px solid #ff0000;
+  border-radius: 8px;
+  padding: 12px 8px;
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.6), inset 0 0 20px rgba(139, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+#my-list-title::before {
+  content: '🩸';
+  position: absolute;
+  left: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+#my-list-title::after {
+  content: '🩸';
+  position: absolute;
+  right: 8px;
+  animation: pulse 1.5s infinite 0.75s;
+}
+
+@keyframes bloodPulse {
+  0%, 100% { 
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6), inset 0 0 20px rgba(139, 0, 0, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.9), inset 0 0 30px rgba(139, 0, 0, 0.5);
+  }
+}
+
+@keyframes drip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+    /* PHASE 1: Horror Profile Badge */
+    .profile-badge-container {
+      background: linear-gradient(135deg, rgba(139, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+      border: 2px solid #b91c1c;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(185, 28, 28, 0.4);
+      animation: profilePulse 3s infinite;
+    }
+
+    @keyframes profilePulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(185, 28, 28, 0.4); }
+      50% { box-shadow: 0 0 25px rgba(185, 28, 28, 0.7); }
+    }
+
+    .profile-icon {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.5));
+    }
+
+    .profile-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 0.9rem;
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      letter-spacing: 1px;
+    }
+
+    /* Trailer Section Styling */
+    .trailer-title {
+      font-family: 'Bebas Neue', cursive;
+      background: linear-gradient(180deg, #fff, #888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .trailer-title::after {
+      content: '🎬';
+      position: absolute;
+      right: -20px;
+      -webkit-text-fill-color: initial;
+      filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+      animation: pulse 2s infinite;
+    }
+
+    .movie-title-streaming {
+      font-family: 'Oswald', sans-serif;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .movie-title-streaming:hover {
+      color: var(--accent-color);
+      transform: scale(1.05);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.6);
+    }
+
+    /* Community Stats Styling */
+    .stats-container {
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .current-movie-title {
+      font-family: 'Oswald', sans-serif;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .rating-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stars-display {
+      color: #ffd700;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .rating-number {
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .rating-count {
+      color: #888;
+      font-size: 0.7rem;
+    }
+
+    .horror-metrics {
+      margin-bottom: 12px;
+    }
+
+    .metric-bar {
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      margin-bottom: 3px;
+    }
+
+    .metric-label span:first-child {
+      color: #aaa;
+    }
+
+    .metric-label span:last-child {
+      color: white;
+      font-weight: bold;
+    }
+
+    .metric-progress {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .metric-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .gore-fill {
+      background: linear-gradient(90deg, #7d0b0b, #ff0000);
+    }
+
+    .fear-fill {
+      background: linear-gradient(90deg, #4a0080, #9400d3);
+    }
+
+    .kill-fill {
+      background: linear-gradient(90deg, #333, #666);
+    }
+
+    /* Rate This Movie Section */
+    .rate-movie-section {
+      background: rgba(185, 28, 28, 0.1);
+      border: 1px solid rgba(185, 28, 28, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .rate-prompt {
+      font-size: 0.75rem;
+      color: #ccc;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .star {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #444;
+      transition: all 0.2s ease;
+    }
+
+    .star:hover {
+      color: #ffd700;
+      transform: scale(1.2);
+    }
+
+    .star.filled {
+      color: #ffd700;
+    }
+
+    .star.hover {
+      color: #ffd700;
+      opacity: 0.7;
+    }
+
+    /* Quick Review Section */
+    .quick-review-section {
+      margin-bottom: 10px;
+    }
+
+    .review-input {
+      width: 100%;
+      padding: 6px 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: white;
+      font-size: 0.7rem;
+      margin-bottom: 6px;
+    }
+
+    .review-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .submit-review-btn {
+      width: 100%;
+      padding: 5px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-review-btn:hover {
+      background: var(--accent-color);
+    }
+
+    /* Recent Reviews */
+    .recent-reviews {
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .review-item {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 2px solid var(--accent-color);
+      padding: 6px;
+      margin-bottom: 6px;
+      font-size: 0.65rem;
+    }
+
+    .review-text {
+      color: #ccc;
+      font-style: italic;
+    }
+
+    .review-meta {
+      color: #666;
+      font-size: 0.6rem;
+      margin-top: 3px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Info button styling */
+    .info-btn {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--accent-color);
+      box-shadow: 0 0 10px var(--accent-color);
+      transition: all 0.3s ease;
+    }
+
+    .info-btn:hover {
+      box-shadow: 0 0 20px var(--accent-color);
+      background-color: rgba(185, 28, 28, 0.2);
+    }
+
+    .info-btn:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .info-btn:hover:before {
+      transform: translateX(100%);
+    }
+
+    /* Chat window styling */
+    .chat-window {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      background: var(--chat-bg);
+      border: 1px solid #333;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      max-height: calc(100vh - 120px);
+    }
+
+    .chat-history {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .chat-input-area {
+      padding: 1rem;
+      background: var(--chat-bg);
+      border-top: 1px solid #333;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 0.75rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .user-bubble {
+      background: var(--user-bubble);
+      align-self: flex-end;
+      color: var(--text-color);
+      margin-left: auto;
+    }
+
+    .bot-bubble {
+      background: var(--bot-bubble);
+      align-self: flex-start;
+      color: var(--text-color);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .movie-link {
+        color: var(--text-color);
+        font-weight: 500;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    /* Movie poster in chat bubble */
+    .movie-poster-inline {
+      width: 100px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid var(--accent-color);
+      margin: 10px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    /* Horror genre tags */
+    .horror-genre-tag {
+      display: inline-block;
+      padding: 5px 10px;
+      background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+      color: white;
+      border-radius: 15px;
+      font-weight: bold;
+      font-size: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: genrePulse 2s infinite;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .horror-genre-tag:hover {
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 5px 15px rgba(185, 28, 28, 0.5);
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    }
+
+    .horror-genre-tag:nth-child(odd) {
+      animation-delay: 0.2s;
+    }
+
+    .horror-genre-tag:nth-child(even) {
+      animation-delay: 0.4s;
+    }
+
+    /* PHASE 1: Favorite genre indicator */
+    .horror-genre-tag.favorite {
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    @keyframes genrePulse {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+
+    /* Obscure Horror Movies Grid */
+    .obscure-movies-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 1rem;
+      min-height: 140px;
+    }
+
+    .obscure-movie-item {
+      background: rgba(25, 25, 25, 0.7);
+      border-radius: 6px;
+      padding: 6px;
+      border: 1px solid #444;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      min-height: 130px;
+    }
+
+    .obscure-movie-item:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    .obscure-poster {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .obscure-video {
+      width: 100%;
+      height: 80px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      display: none;
+    }
+
+    .obscure-movie-item.playing .obscure-poster {
+      display: none;
+    }
+
+    .obscure-movie-item.playing .obscure-video {
+      display: block;
+    }
+
+    .obscure-title {
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .obscure-year {
+      font-size: 0.6rem;
+      color: #aaa;
+      text-align: center;
+      margin-bottom: 3px;
+    }
+
+    .dvd-link {
+      font-size: 0.6rem;
+      color: var(--accent-color);
+      text-decoration: underline;
+      text-align: center;
+      display: block;
+    }
+
+    /* Video Modal */
+    .video-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .video-container {
+      position: relative;
+      width: 80%;
+      max-width: 600px;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .video-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .video-iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+    }
+
+    /* Movie poster for streaming section */
+    .streaming-movie-poster {
+      width: 50px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid rgba(185, 28, 28, 0.3);
+      margin-right: 10px;
+      float: left;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .streaming-movie-poster:hover {
+      transform: scale(1.05);
+    }
+
+    /* Streaming availability */
+    .streaming-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .streaming-netflix {
+      background: #E50914;
+      color: white;
+    }
+
+    .streaming-prime {
+      background: #00A8E1;
+      color: white;
+    }
+
+    .streaming-hulu {
+      background: #1CE783;
+      color: black;
+    }
+
+    .streaming-shudder {
+      background: #BE0000;
+      color: white;
+    }
+
+    .streaming-hbo {
+      background: #5822B4;
+      color: white;
+    }
+
+    /* Theater section */
+    .theater-section {
+      background: linear-gradient(135deg, rgba(125, 20, 20, 0.4), rgba(0, 0, 0, 0.6));
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(185, 28, 28, 0.6);
+      box-shadow: 0 0 15px rgba(185, 28, 28, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theater-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #b91c1c, #7d1414, #b91c1c);
+      border-radius: 8px;
+      opacity: 0.5;
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .theater-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 4px;
+      margin-bottom: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .theater-item:hover {
+      background: rgba(185, 28, 28, 0.2);
+      transform: translateX(5px);
+    }
+
+    .theater-poster {
+      width: 50px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      border: 1px solid rgba(185, 28, 28, 0.5);
+    }
+
+    .theater-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .theater-title {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .theater-date {
+      font-size: 0.6rem;
+      color: #ff6b6b;
+      font-weight: 500;
+    }
+
+    .theater-rating {
+      font-size: 0.55rem;
+      color: #ffd700;
+      margin-top: 2px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Horror effects */
+    @keyframes flicker {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.8;
+      }
+      20%, 80% {
+        opacity: 0.9;
+      }
+    }
+
+    .flicker {
+      animation: flicker 0.1s infinite;
+    }
+
+    @keyframes bloodFall {
+      0% {
+        transform: translateY(-200px) scale(0);
+        opacity: 0;
+        height: 15px;
+      }
+      10% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+        height: 15px;
+      }
+      50% {
+        height: 40px;
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(100vh);
+        height: 10px;
+        opacity: 0;
+      }
+    }
+
+    .blood-drop {
+      position: fixed;
+      background-color: var(--blood-color);
+      border-radius: 50% 50% 45% 50%;
+      transform: rotate(20deg);
+      filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+      animation: bloodFall 7s ease-in-out forwards;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .blood-splatter {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      background-color: var(--blood-color);
+      border-radius: 40% 60% 60% 20%;
+      transform: rotate(0deg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 101;
+      animation: splatter 4s ease-in-out forwards;
+    }
+
+    @keyframes splatter {
+      0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+      10% {
+        opacity: 0.9;
+        transform: scale(1.2) rotate(20deg);
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1) rotate(45deg);
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d42222;
+    }
+
+    .skeleton-loading {
+        background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-glow {
+      text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 15px var(--accent-color);
+      transition: text-shadow 0.3s ease-in-out;
+    }
+    .logo-glow:hover {
+      text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color), 0 0 30px var(--accent-color);
+    }
+
+    @keyframes pulse-once {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse-once {
+      animation: pulse-once 0.5s ease-in-out;
+    }
+
+    /* Recommendation card styling */
+    .rec-card {
+      background: rgba(40, 40, 40, 0.5);
+      border: 1px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .rec-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(121, 20, 20, 0.3);
+      border-color: var(--accent-color);
+    }
+
+    /* Sidebar section styling */
+    .sidebar-section {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-section:after {
+      content: '';
+      display: block;
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+
+    /* Scrollable sections with fixed heights */
+    .sidebar-section .max-h-60 {
+      max-height: 12rem;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-color) var(--bg-color);
+    }
+
+    /* Smoother transitions for blood dividers */
+    .border-red-900 {
+      box-shadow: 0 0 8px rgba(127, 29, 29, 0.5);
+      transition: opacity 0.3s ease;
+    }
+
+    .side-panel:hover .border-red-900 {
+      opacity: 0.8;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .side-panel {
+        width: 100%;
+        max-height: 200px;
+      }
+
+      .chat-window {
+        height: 60vh;
+      }
+
+      .quiz-modal {
+        padding: 10px;
+      }
+
+      .quiz-content {
+        width: 95%;
+        padding: 20px;
+      }
+    }
+
+    /* Centering the page */
+    .centered-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+/* Trailer close button */
+    .trailer-close-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #8b0000;
+      color: white;
+      border: 2px solid #ff0000;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .trailer-close-btn:hover {
+      background: #ff0000;
+      transform: rotate(90deg);
+    }
+
+    /* Compact sections */
+    .compact-section {
+      margin-bottom: 0.5rem;
+    }
+
+    .compact-title {
+      font-size: 0.7rem;
+      color: var(--accent-color);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-shadow: 0 0 3px rgba(255, 0, 0, 0.3);
+    }
+
+    /* QUIZ MODAL STYLES ADDED HERE */
+    .quiz-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      animation: fadeIn 0.3s;
+    }
+
+    .quiz-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-content {
+      background: linear-gradient(135deg, #1a0000, #000000);
+      border: 3px solid #8b0000;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .quiz-title {
+      color: #ff0000;
+      font-size: 2em;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      font-family: 'Creepster', cursive;
+      margin-bottom: 10px;
+    }
+
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .progress-axe {
+      flex: 1;
+      height: 40px;
+      background: #2a0000;
+      position: relative;
+      border: 2px solid #8b0000;
+      border-radius: 5px;
+    }
+
+    .blood-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #8b0000, #ff0000);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+      overflow: hidden;
+    }
+
+    .blood-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.2) 10px,
+        rgba(0, 0, 0, 0.2) 20px
+      );
+      animation: bloodFlow 1s linear infinite;
+    }
+
+    @keyframes bloodFlow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(20px); }
+    }
+
+    .progress-text {
+      color: #ff6b6b;
+      font-weight: bold;
+      min-width: 50px;
+    }
+
+    .quiz-question {
+      background: rgba(139, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .question-text {
+      color: #e0e0e0;
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-option {
+      padding: 15px;
+      background: linear-gradient(135deg, #2a0000, #1a0000);
+      border: 2px solid #4a0000;
+      border-radius: 8px;
+      color: #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+      background: linear-gradient(135deg, #4a0000, #2a0000);
+      border-color: #8b0000;
+      transform: translateX(5px);
+    }
+
+    .quiz-option.correct {
+      background: linear-gradient(135deg, #004a00, #002a00);
+      border-color: #00ff00;
+      animation: correctPulse 0.5s;
+    }
+
+    .quiz-option.incorrect {
+      background: linear-gradient(135deg, #4a0000, #8b0000);
+      border-color: #ff0000;
+      animation: shake 0.5s;
+    }
+
+    @keyframes correctPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .quiz-feedback {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+
+    .quiz-feedback.correct {
+      color: #00ff00;
+    }
+
+    .quiz-feedback.incorrect {
+      color: #ff0000;
+    }
+
+    .skull-icon {
+      font-size: 3em;
+      animation: fadeIn 0.5s;
+    }
+
+    .quiz-results {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .final-score {
+      font-size: 3em;
+      color: #ff0000;
+      text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+      margin: 20px 0;
+    }
+
+    .horror-title {
+      font-size: 1.5em;
+      color: #ff6b6b;
+      margin: 15px 0;
+      font-family: 'Creepster', cursive;
+    }
+
+    .quiz-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .quiz-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 2em;
+      color: #8b0000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quiz-close:hover {
+      color: #ff0000;
+      transform: rotate(90deg);
+    }
+
+    .next-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #8b0000, #4a0000);
+      border: 2px solid #ff0000;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .next-btn:hover {
+      background: linear-gradient(135deg, #ff0000, #8b0000);
+    }
+
+    /* SCARY NAVIGATION BUTTONS */
+    .horror-nav-btn {
+      position: relative;
+      padding: 10px 20px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(135deg, #8b0000, #4a0000);
+      border: 2px solid #ff0000;
+      border-radius: 25px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+    }
+
+    .horror-nav-btn:hover {
+      background: linear-gradient(135deg, #ff0000, #8b0000);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+      transform: translateY(-2px);
+      border-color: #ff4444;
+    }
+
+    .horror-nav-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff0000, #8b0000, #ff0000);
+      z-index: -1;
+      border-radius: 25px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      animation: borderPulse 2s infinite;
+    }
+
+    .horror-nav-btn:hover::before {
+      opacity: 0.6;
+    }
+
+    @keyframes borderPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+  <style>
+    /* Dungeon background and swinging light */
+    #dungeon-bg {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at var(--light-x, 50%) var(--light-y, 20%), rgba(255,255,210,0.07), rgba(0,0,0,0.95) 60%),
+        repeating-linear-gradient(0deg, #1b1b1b 0 46px, #141414 46px 48px),
+        repeating-linear-gradient(90deg, #161616 0 92px, #0f0f0f 92px 94px);
+      background-blend-mode: screen, normal, normal;
+      filter: saturate(0.85) contrast(1.1);
+      animation: swingLight 6s ease-in-out infinite;
+      opacity: 0.6;
+    }
+    @keyframes swingLight {
+      0% { --light-x: 30%; --light-y: 18%; }
+      50% { --light-x: 70%; --light-y: 28%; }
+      100% { --light-x: 30%; --light-y: 18%; }
+    }
+
+    /* Jason-style mask overlay when answer is incorrect */
+    #mask-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.9) 70%);
+      z-index: 3000;
+      pointer-events: none;
+      animation: maskFade 1.2s ease forwards;
+    }
+    #mask-overlay .mask {
+      width: min(40vw, 260px);
+      height: min(52vw, 320px);
+      background: url('horror.jpg') center/cover no-repeat;
+      filter: drop-shadow(0 0 25px rgba(255,0,0,0.6)) saturate(0.9) contrast(1.05);
+      animation: maskZoom 1.1s ease both;
+      border-radius: 4px;
+    }
+    @keyframes maskZoom {
+      0% { transform: scale(0.6) rotate(-2deg); opacity: 0; }
+      20% { opacity: 1; }
+      60% { transform: scale(1.1) rotate(2deg); }
+      100% { transform: scale(1); opacity: 0.0; }
+    }
+    @keyframes maskFade {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+  <style>
+    /* Dungeon background and lighting */
+    #dungeon-bg {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at var(--light-x, 50%) var(--light-y, 20%), rgba(255,255,210,0.07), rgba(0,0,0,0.95) 60%),
+        repeating-linear-gradient(0deg, #1b1b1b 0 46px, #141414 46px 48px),
+        repeating-linear-gradient(90deg, #161616 0 92px, #0f0f0f 92px 94px);
+      background-blend-mode: screen, normal, normal;
+      filter: saturate(0.85) contrast(1.1);
+      animation: swingLight 6s ease-in-out infinite;
+      opacity: 0.6;
+    }
+    @keyframes swingLight {
+      0% { --light-x: 30%; --light-y: 18%; }
+      50% { --light-x: 70%; --light-y: 28%; }
+      100% { --light-x: 30%; --light-y: 18%; }
+    }
+
+    /* Jason-style mask overlay for incorrect answers */
+    #mask-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.9) 70%);
+      z-index: 3000;
+      pointer-events: none;
+      animation: maskFade 1.2s ease forwards;
+    }
+    #mask-overlay .mask {
+      width: min(40vw, 260px);
+      height: min(52vw, 320px);
+      background: url('horror.jpg') center/cover no-repeat;
+      filter: drop-shadow(0 0 25px rgba(255,0,0,0.6)) saturate(0.9) contrast(1.05);
+      animation: maskZoom 1.1s ease both;
+      border-radius: 4px;
+    }
+    @keyframes maskZoom {
+      0% { transform: scale(0.6) rotate(-2deg); opacity: 0; }
+      20% { opacity: 1; }
+      60% { transform: scale(1.1) rotate(2deg); }
+      100% { transform: scale(1); opacity: 0.0; }
+    }
+    @keyframes maskFade {
+      0%, 80% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+    <div id="dungeon-bg" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"></div>
+
+    <div class="centered-container mx-auto">
+        <header class="w-full flex justify-between items-center p-4">
+            <div class="flex items-center space-x-4">
+                <h1 class="nosifer text-4xl text-white logo-glow">Horror Oracle</h1>
+                <div class="hidden md:flex space-x-3">
+                    <button id="news-btn" class="px-4 py-2 text-sm bg-gray-800 rounded-full border border-gray-700 text-gray-300 hover:bg-gray-700 transition-colors">Horror News</button>
+                    <button id="toggle-releases" class="px-4 py-2 text-sm bg-gray-800 rounded-full border border-gray-700 text-gray-300 hover:bg-gray-700 transition-colors">Recent Releases</button>
+                    <button id="forum-btn" class="px-4 py-2 text-sm bg-gray-800 rounded-full border border-gray-700 text-gray-300 hover:bg-gray-700 transition-colors">Horror Forum</button>
+                </div>
+            </div>
+            <div class="md:flex hidden items-center space-x-4">
+                <span id="user-status" class="text-sm text-gray-400">Not signed in</span>
+                <div id="google-login-btn"></div>
+                <div class="w-8 h-8 rounded-full bg-red-800 flex items-center justify-center text-white text-xs font-bold">HO</div>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- LEFT SIDEBAR: Theater, Streaming, My List -->
+            <aside class="side-panel hidden md:flex flex-col">
+                <!-- PHASE 1: Horror Profile Badge (NEW) -->
+                <div id="horror-profile-section" class="profile-badge-container hidden">
+                    <div class="profile-icon" id="profile-icon">🎃</div>
+                    <div class="profile-name" id="profile-name">Horror Fan</div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h2 class="side-panel-title">Now Playing</h2>
+
+                    <div class="theater-section" id="theater-section-dynamic">
+                        <h3 class="text-center text-sm font-bold text-white mb-2" style="text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); animation: pulse 2s infinite;">🎬 NOW IN THEATERS 🎬</h3>
+                        <!-- Dynamic content will be loaded here -->
+                        <div class="theater-loading text-center text-gray-400 text-xs">Loading current releases...</div>
+                    </div>
+                </div>
+
+                <div class="border-t border-red-900 my-3 opacity-50"></div>
+
+                <div class="sidebar-section">
+                    <h2 class="trailer-title">Watch Trailer</h2>
+                    <div id="streaming-container" class="space-y-3 max-h-96 overflow-y-auto">
+                        <p class="text-xs text-center text-gray-400 mb-3">Search for a movie to see streaming options</p>
+                    </div>
+                </div>
+
+                <div class="border-t border-red-900 my-3 opacity-50"></div>
+
+                <div class="sidebar-section">
+                    <h2 class="side-panel-title" id="my-list-title">MY LIST</h2>
+                    <ul id="my-list-container" class="space-y-1 text-gray-400" style="font-size: 0.6rem; max-height: 100px; overflow-y: auto;">
+                        <li class="text-center">Empty</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- CHAT WINDOW -->
+            <main class="chat-window">
+                <div id="chat-history" class="chat-history">
+                    <div class="bot-bubble bg-gray-800 text-base">
+                        <p class="mb-3 text-red-500 font-bold text-lg">🩸 Horror Oracle 🩸</p>
+                        <p class="text-white mb-3 font-medium text-base leading-relaxed">Welcome, mortal. I am your gateway to the darkest depths of cinema.</p>
+                        <p class="text-white mb-3 leading-relaxed">I possess knowledge of EVERY horror film ever created. Search for anything that haunts your nightmares:</p>
+                        <div class="flex flex-wrap gap-2 mb-3" id="genre-tags-container">
+                            <span class="horror-genre-tag" onclick="handleGenreClick('slashers')">🔪 SLASHERS</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('zombies')">🧟 ZOMBIES</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('vampires')">🦇 VAMPIRES</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('gore-fests')">🩸 GORE FESTS</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('supernatural')">👻 SUPERNATURAL</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('demons')">😈 DEMONS</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('psycho-killers')">🪓 PSYCHO KILLERS</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('alien-horror')">👽 ALIEN HORROR</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('creature-features')">🕷️ CREATURE FEATURES</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('haunted-houses')">🏚️ HAUNTED HOUSES</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('psychological')">🎭 PSYCHOLOGICAL</span>
+                            <span class="horror-genre-tag" onclick="handleGenreClick('cult-horror')">⛪ CULT HORROR</span>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-3"><strong>Discover the undiscovered:</strong> Obscure Italian giallo • Japanese J-horror • 80s slashers • Modern elevated horror • Grindhouse gore • Classic Universal monsters • Found footage nightmares</p>
+                        <p class="text-red-400 text-sm font-bold">Type any movie title, director name, or horror subgenre. I will reveal everything...</p>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" id="user-input" placeholder="Type a movie, director, or subgenre..." class="flex-1 px-4 py-3 rounded-full bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 transition-all duration-200">
+                    <button id="send-btn" class="px-6 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+            
+                <!-- TRAILER IFRAME ADDED (Horror Oracle - Embedded Trailer) -->
+<div id="trailer-frame-container" class="w-full flex justify-center my-4" style="display:none; position:relative;">
+  <button class="trailer-close-btn" onclick="closeTrailer()">×</button>
+  <iframe id="trailer-iframe"
+    width="420"
+    height="236"
+    frameborder="0"
+    allowfullscreen
+    class="rounded-lg border-2 border-red-700 shadow-lg"
+    style="background:#000;">
+  </iframe>
+</div>
+<!-- END TRAILER IFRAME -->
+            </main>
+
+            <!-- RIGHT SIDEBAR: Stacked Similar Movies and Community Stats -->
+            <aside class="side-panel hidden md:flex flex-col">
+                
+                <!-- PHASE 1: FOR YOU SECTION (Replaces SIMILAR MOVIES when logged in) -->
+                <div class="compact-section">
+                    <h2 class="compact-title" id="recommendations-title">SIMILAR MOVIES</h2>
+                    <p id="for-you-subtitle" class="text-xs text-center text-gray-400 mb-2 hidden"></p>
+                    <div id="recommendations-container" class="space-y-1" style="max-height: 200px; overflow-y: auto;">
+                        <div class="text-center p-2">
+                            <p class="text-gray-400" style="font-size: 0.6rem;">Search for a movie</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-red-900 my-2 opacity-30"></div>
+
+                <!-- COMMUNITY STATS SECTION (Always Visible) -->
+                <div class="compact-section">
+                    <h2 class="compact-title">COMMUNITY STATS</h2>
+                    <div id="community-stats-container">
+                        <!-- Movie title will appear here -->
+                        <div id="current-movie-display" class="hidden">
+                            <div class="current-movie-title" id="stats-movie-title" style="font-size: 0.8rem;">No Movie Selected</div>
+                            
+                            <!-- Community Rating Display -->
+                            <div class="stats-container" style="padding: 6px;">
+                                <div class="rating-display" style="margin-bottom: 8px;">
+                                    <span class="stars-display" id="community-stars" style="font-size: 1rem;">⭐⭐⭐⭐⭐</span>
+                                    <div>
+                                        <span class="rating-number" id="rating-value" style="font-size: 0.9rem;">0.0</span>
+                                        <div class="rating-count" id="rating-count" style="font-size: 0.6rem;">(0 ratings)</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Horror Metrics -->
+                                <div class="horror-metrics" style="margin-bottom: 8px;">
+                                    <div class="metric-bar" style="margin-bottom: 6px;">
+                                        <div class="metric-label" style="font-size: 0.65rem;">
+                                            <span>🩸 Gore</span>
+                                            <span id="gore-value">0%</span>
+                                        </div>
+                                        <div class="metric-progress" style="height: 6px;">
+                                            <div class="metric-fill gore-fill" id="gore-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="metric-bar" style="margin-bottom: 6px;">
+                                        <div class="metric-label" style="font-size: 0.65rem;">
+                                            <span>😱 Fear</span>
+                                            <span id="fear-value">0/10</span>
+                                        </div>
+                                        <div class="metric-progress" style="height: 6px;">
+                                            <div class="metric-fill fear-fill" id="fear-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="metric-bar">
+                                        <div class="metric-label" style="font-size: 0.65rem;">
+                                            <span>💀 Kills</span>
+                                            <span id="kill-value">0</span>
+                                        </div>
+                                        <div class="metric-progress" style="height: 6px;">
+                                            <div class="metric-fill kill-fill" id="kill-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rate This Movie Section -->
+                            <div class="rate-movie-section" style="padding: 8px;">
+                                <div class="rate-prompt" style="font-size: 0.7rem;">Rate this movie:</div>
+                                <div class="star-rating" id="user-rating">
+                                    <span class="star" data-rating="1" style="font-size: 1.2rem;">☆</span>
+                                    <span class="star" data-rating="2" style="font-size: 1.2rem;">☆</span>
+                                    <span class="star" data-rating="3" style="font-size: 1.2rem;">☆</span>
+                                    <span class="star" data-rating="4" style="font-size: 1.2rem;">☆</span>
+                                    <span class="star" data-rating="5" style="font-size: 1.2rem;">☆</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Review Section -->
+                            <div class="quick-review-section" style="padding: 0 8px;">
+                                <input type="text" class="review-input" id="review-input" placeholder="Quick thoughts..." maxlength="100" style="font-size: 0.65rem; padding: 4px 6px;">
+                                <button class="submit-review-btn" onclick="submitReview()" style="font-size: 0.65rem; padding: 4px;">Submit Review</button>
+                            </div>
+                            
+                            <!-- Recent Reviews -->
+                            <div class="recent-reviews" id="recent-reviews" style="max-height: 80px; padding: 0 8px;">
+                                <div class="review-item" style="padding: 4px; font-size: 0.6rem;">
+                                    <div class="review-text">No reviews yet. Be the first!</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- No Movie Selected State -->
+                        <div id="no-movie-selected" class="text-center p-2">
+                            <p class="text-gray-400" style="font-size: 0.65rem;">Search for a movie to see stats</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-red-900 my-2 opacity-30"></div>
+
+                <!-- OBSCURE HORROR GEMS (Increased size) -->
+                <div class="compact-section">
+                    <h2 class="compact-title">OBSCURE GEMS</h2>
+                    <div class="obscure-movies-grid" style="grid-template-columns: 1fr 1fr; min-height: 160px;">
+                        <!-- Dynamic content will be loaded here by loadDailyObscureGems() -->
+                    </div>
+                </div>
+
+                <button class="info-btn w-full px-3 py-2 bg-black text-white text-center rounded-full font-bold mt-2 text-xs">
+                    About the Oracle
+                </button>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-container">
+            <span class="video-close">&times;</span>
+            <iframe id="video-iframe" class="video-iframe" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- QUIZ MODAL ADDED HERE -->
+    <div id="quizModal" class="quiz-modal">
+        <div class="quiz-content">
+            <span class="quiz-close" onclick="closeQuiz()">&times;</span>
+            <div class="quiz-header">
+                <h2 class="quiz-title">🎬 HORROR KNOWLEDGE TEST 🎬</h2>
+                <p id="quizMovieTitle" style="color: #8b8b8b;"></p>
+            </div>
+            
+            <div class="quiz-progress">
+                <span class="progress-text" id="progressText">1/10</span>
+                <div class="progress-axe">
+                    <div class="blood-fill" id="bloodFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="quizBody">
+                <!-- Quiz content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for quiz sounds -->
+    <audio id="correctSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTgKGGS57OScTgwLUKzn4rVhGAUzmNn1yHkrBh955vLTgjQNF1+z6+ylVhUIQ5vj9sRyJAUyg9T10HksCi994fXTgjQNF1+z6+ylVhUIQ5vj9sRyJAUyg9T10HksCi594fXT" type="audio/wav">
+    </audio>
+    
+    <audio id="wrongSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAABiYmJiYmJhYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmFiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmFiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmFiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmFiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmFiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJpYmJiYmJiYmFiYmJp" type="audio/wav">
+    </audio>
+
+    <script src="script-js-combined.js"></script>
+    
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      // PHASE 1: Global user variable
+      let currentHorrorUser = null;
+
+      window.onload = function() {
+        google.accounts.id.initialize({
+          client_id: '383630092112-5vqj924hq2n44tjk1gpb3bisokfab50m.apps.googleusercontent.com',
+          callback: handleCredentialResponse
+        });
+        
+        google.accounts.id.renderButton(
+          document.getElementById("google-login-btn"),
+          { theme: "filled_black", size: "medium", text: "signin_with" }
+        );
+
+        // Check for existing user in localStorage
+        const savedUser = localStorage.getItem('horrorUser');
+        if (savedUser) {
+          const userObject = JSON.parse(savedUser);
+          currentHorrorUser = userObject;
+          document.getElementById('user-status').textContent = `Hi, ${userObject.name}!`;
+          updateUIForUser(userObject.name);
+          loadUserData(userObject.sub);
+        }
+      };
+
+      function handleCredentialResponse(response) {
+        const userObject = JSON.parse(atob(response.credential.split('.')[1]));
+        currentHorrorUser = userObject;
+        
+        document.getElementById('user-status').textContent = `Hi, ${userObject.name}!`;
+        localStorage.setItem('horrorUser', JSON.stringify(userObject));
+        
+        updateUIForUser(userObject.name);
+        loadUserData(userObject.sub);
+        
+        console.log("User signed in:", userObject.name);
+      }
+
+      function updateUIForUser(name) {
+        const listTitle = document.getElementById('my-list-title');
+        if (listTitle) {
+          listTitle.textContent = `${name.toUpperCase()}'S LIST`;
+        }
+      }
+
+      // PHASE 1: Complete loadUserData function
+      function loadUserData(googleId) {
+        fetch('/get-user-data', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({googleId: googleId})
+        })
+        .then(r => r.json())
+        .then(data => {
+          // Display user's list in the sidebar
+          if (data.myList && data.myList.length > 0) {
+            const container = document.getElementById('my-list-container');
+            if (container) {
+              container.innerHTML = data.myList.map(movie => 
+                `<li class="text-white cursor-pointer hover:text-red-500 mb-1">${movie}</li>`
+              ).join('');
+            }
+          }
+          
+          // PHASE 1: Load personalized content if user has profile data
+          if (data.horror_profile || data.genre_searches) {
+            loadHorrorProfile(googleId);
+            loadPersonalizedRecommendations(googleId);
+          }
+        })
+        .catch(error => console.error('Error loading user data:', error));
+      }
+
+      function addToMyList(movieTitle) {
+        const user = JSON.parse(localStorage.getItem('horrorUser'));
+        if (!user) {
+          alert('Please sign in with Google to save movies to your list!');
+          return;
+        }
+        
+        fetch('/save-to-list', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            googleId: user.sub,
+            movie: movieTitle
+          })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            // Update the sidebar list
+            const container = document.getElementById('my-list-container');
+            if (container) {
+              container.innerHTML = data.list.map(movie => 
+                `<li class="text-white cursor-pointer hover:text-red-500 mb-1">${movie}</li>`
+              ).join('');
+            }
+            
+            // Show success message
+            alert(`Added "${movieTitle}" to your list!`);
+          }
+        })
+        .catch(error => {
+          console.error('Error saving to list:', error);
+          alert('Error saving movie to your list.');
+        });
+      }
+
+      function saveUserRating(movieTitle, rating) {
+        const user = JSON.parse(localStorage.getItem('horrorUser'));
+        if (!user) {
+          alert('Please sign in to rate movies!');
+          return;
+        }
+        
+        fetch('/save-rating', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            googleId: user.sub,
+            movie: movieTitle,
+            rating: rating
+          })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            console.log(`Rating saved: ${movieTitle} - ${rating} stars`);
+          }
+        })
+        .catch(error => console.error('Error saving rating:', error));
+      }
+
+      // PHASE 1: Load horror profile
+      async function loadHorrorProfile(googleId) {
+        try {
+          const response = await fetch('/get-horror-profile', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({googleId: googleId})
+          });
+          const data = await response.json();
+          
+          if (data.horror_profile) {
+            // Show profile section
+            const profileSection = document.getElementById('horror-profile-section');
+            if (profileSection) {
+              profileSection.classList.remove('hidden');
+              
+              // Set profile name
+              const profileName = document.getElementById('profile-name');
+              if (profileName) {
+                profileName.textContent = data.horror_profile;
+              }
+              
+              // Set icon based on profile
+              const profileIcons = {
+                "Slasher Fan": "🔪",
+                "Zombie Enthusiast": "🧟",
+                "Vampire Lover": "🧛",
+                "Gore Hound": "💉",
+                "Supernatural Seeker": "👻",
+                "Demon Hunter": "😈",
+                "Psycho Thriller Fan": "🔫",
+                "Sci-Fi Horror Fan": "👽",
+                "Monster Movie Buff": "🦖",
+                "Haunted House Explorer": "🏚️",
+                "Mind Bender": "🧠",
+                "Cult Classic Connoisseur": "🕯️",
+                "Horror Enthusiast": "🎃",
+                "New Horror Fan": "🎃"
+              };
+              
+              const icon = profileIcons[data.horror_profile] || "🎃";
+              const profileIcon = document.getElementById('profile-icon');
+              if (profileIcon) {
+                profileIcon.textContent = icon;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error loading horror profile:', error);
+        }
+      }
+
+      // PHASE 1: Load personalized recommendations
+      async function loadPersonalizedRecommendations(googleId) {
+        try {
+          const response = await fetch('/get-personalized-recommendations', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({googleId: googleId})
+          });
+          const data = await response.json();
+          
+          if (data.recommendations && data.recommendations.length > 0) {
+            // Update title to "FOR YOU"
+            const recsTitle = document.getElementById('recommendations-title');
+            if (recsTitle) {
+              recsTitle.textContent = 'FOR YOU';
+            }
+            
+            // Update subtitle
+            const subtitle = document.getElementById('for-you-subtitle');
+            if (subtitle) {
+              subtitle.textContent = `Because you love ${data.based_on_genre}`;
+              subtitle.classList.remove('hidden');
+            }
+            
+            // Display recommendations using existing function
+            if (typeof updateRecommendations === 'function') {
+              updateRecommendations(data.recommendations);
+            }
+          }
+        } catch (error) {
+          console.error('Error loading personalized recommendations:', error);
+        }
+      }
+    </script>
+
+
+
+    <script>
+    function closeTrailer() {
+      document.getElementById('trailer-frame-container').style.display = 'none';
+      document.getElementById('trailer-iframe').src = '';
+    }
+    </script>
+</body>
+</html>
+
